@@ -3,73 +3,41 @@ import confetti from 'canvas-confetti';
 import { ArrowLeft } from 'lucide-react';
 
 const Surprise = ({ onBack }) => {
-    const [photo, setPhoto] = useState(null);
-    const [message, setMessage] = useState('');
-    const [uploading, setUploading] = useState(false);
-    const [success, setSuccess] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
+    const [showHearts, setShowHearts] = useState(false);
 
     useEffect(() => {
-        const duration = 4000;
+        // Big confetti burst on load
+        const duration = 5000;
         const animationEnd = Date.now() + duration;
-        const colors = ['#ec407a', '#ab47bc', '#ffd700', '#ff6b9d', '#fff'];
+        const colors = ['#ec407a', '#ab47bc', '#ffd700', '#ff6b9d', '#fff', '#e91e63'];
 
         const interval = setInterval(() => {
             const timeLeft = animationEnd - Date.now();
             if (timeLeft <= 0) return clearInterval(interval);
 
             confetti({
-                particleCount: 4,
+                particleCount: 5,
                 angle: 60,
                 spread: 55,
                 origin: { x: 0, y: 0.7 },
                 colors
             });
             confetti({
-                particleCount: 4,
+                particleCount: 5,
                 angle: 120,
                 spread: 55,
                 origin: { x: 1, y: 0.7 },
                 colors
             });
-        }, 100);
+        }, 80);
+
+        // Stagger message appearance
+        setTimeout(() => setShowMessage(true), 800);
+        setTimeout(() => setShowHearts(true), 2000);
+
+        return () => clearInterval(interval);
     }, []);
-
-    const handleFile = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => setPhoto(reader.result);
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const saveMemory = async () => {
-        if (!photo && !message) return;
-        setUploading(true);
-
-        try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-            const res = await fetch(`${API_URL}/api/upload`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: photo ? 'photo' : 'note',
-                    content: photo || message
-                })
-            });
-
-            if (res.ok) {
-                setSuccess(true);
-                setTimeout(() => setSuccess(false), 3000);
-                setMessage('');
-                setPhoto(null);
-            }
-        } catch (err) {
-            alert('Could not save memory. Is the backend running?');
-        } finally {
-            setUploading(false);
-        }
-    };
 
     return (
         <div className="surprise-card glass-card fade-in" style={{ position: 'relative' }}>
@@ -88,53 +56,54 @@ const Surprise = ({ onBack }) => {
             >
                 <ArrowLeft size={28} />
             </button>
+
             <span className="big-emoji">💝</span>
 
             <h1 className="surprise-title">Happy Valentine's Day!</h1>
 
-            <div className="surprise-message">
-                <p>
-                    You are my everything, my <span className="highlight">Bulu buluuu</span>,
-                    and my forever Valentine. Every moment with you is magical.
-                    Let's capture this beautiful moment together! 📸
-                </p>
-            </div>
-
-            {photo ? (
-                <div className="photo-preview">
-                    <img src={photo} alt="Our Memory" />
-                    <button className="remove-btn" onClick={() => setPhoto(null)}>✕</button>
-                </div>
-            ) : (
-                <div className="upload-area">
-                    <div className="upload-box">
-                        <span className="icon">📷</span>
-                        <span>Camera</span>
-                        <input type="file" accept="image/*" capture="environment" onChange={handleFile} />
-                    </div>
-                    <div className="upload-box">
-                        <span className="icon">📁</span>
-                        <span>Upload</span>
-                        <input type="file" accept="image/*" onChange={handleFile} />
-                    </div>
+            {showMessage && (
+                <div className="surprise-message fade-in">
+                    <p>
+                        My dearest <span className="highlight">Bulu buluuu</span>,
+                    </p>
+                    <p style={{ marginTop: '12px' }}>
+                        You are the most beautiful thing that ever happened to me.
+                        Every single day with you feels like a dream I never want to wake up from. 🌙
+                    </p>
+                    <p style={{ marginTop: '12px' }}>
+                        Your smile lights up my entire world, and your laugh is my favorite melody.
+                        I fall in love with you more and more every moment. 💫
+                    </p>
+                    <p style={{ marginTop: '12px' }}>
+                        Thank you for being my <span className="highlight">everything</span> —
+                        my best friend, my soulmate, and my forever Valentine.
+                    </p>
+                    <p style={{ marginTop: '16px', fontSize: '1.3rem' }}>
+                        I love you to the moon and back 🌙💖
+                    </p>
                 </div>
             )}
 
-            <textarea
-                className="note-textarea"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Write a sweet note to remember this moment... 💕"
-                rows="3"
-            />
-
-            <button
-                className={`btn-save ${success ? 'success' : ''}`}
-                onClick={saveMemory}
-                disabled={uploading || (!photo && !message)}
-            >
-                {uploading ? '⏳ Saving...' : success ? '✅ Saved!' : '💾 Save Memory'}
-            </button>
+            {showHearts && (
+                <div className="fade-in" style={{ textAlign: 'center', marginTop: '20px' }}>
+                    <p style={{
+                        fontFamily: "'Dancing Script', cursive",
+                        fontSize: '2rem',
+                        background: 'linear-gradient(135deg, var(--pink-300), var(--gold))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        marginBottom: '12px'
+                    }}>
+                        Forever Yours 💕
+                    </p>
+                    <div style={{
+                        fontSize: '2.5rem',
+                        animation: 'heartbeat 1.5s ease-in-out infinite'
+                    }}>
+                        💖✨💖
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
