@@ -12,7 +12,7 @@ function App() {
   const [stage, setStage] = useState('welcome');
   // Fallback music if local file is missing
   const REMOTE_MUSIC = 'https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3';
-  const LOCAL_MUSIC = '/music.mp3';
+  const LOCAL_MUSIC = `${import.meta.env.BASE_URL}music.mp3`;
 
   const audioRef = useRef(new Audio(LOCAL_MUSIC));
   const [isPlaying, setIsPlaying] = useState(false);
