@@ -1,0 +1,30 @@
+{
+    "name": "Valentine Surprise 💝",
+    "short_name": "For My Love",
+    "description": "A special Valentine's Day surprise for someone you love",
+    "start_url": "/valentine-surprise/",
+    "scope": "/valentine-surprise/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#1a0011",
+    "theme_color": "#ec407a",
+    "icons": [
+        {
+            "src": "icon-192.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icon-512.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "heart.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}
