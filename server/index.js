@@ -16,6 +16,9 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error('MongoDB Connection Error:', err));
 
+// Health check for Render
+app.get('/', (req, res) => res.json({ status: 'ok', message: '💝 Valentine API running' }));
+
 app.use('/api', apiRoutes);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
